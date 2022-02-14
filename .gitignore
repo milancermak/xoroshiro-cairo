@@ -1,3 +1,8 @@
+*.code-workspace
+/artifacts/
+accounts.json
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
