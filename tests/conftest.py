@@ -7,9 +7,12 @@ from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet, StarknetContract
 
 
+def here() -> str:
+    return os.path.abspath(os.path.dirname(__file__))
+
+
 def contract_path(contract_name: str) -> str:
-    here = os.path.abspath(os.path.dirname(__file__))
-    return os.path.join(here, "..", "contracts", contract_name)
+    return os.path.join(here(), "..", "contracts", contract_name)
 
 
 def compile_contract(contract_name: str) -> ContractDefinition:
@@ -18,7 +21,7 @@ def compile_contract(contract_name: str) -> ContractDefinition:
         [contract_src],
         debug_info=True,
         disable_hint_validation=True,
-        cairo_path=["../contracts/"]
+        cairo_path=[os.path.join(here(), "..", "contracts")]
     )
 
 
@@ -31,6 +34,18 @@ def event_loop():
 async def starknet() -> Starknet:
     starknet = await Starknet.empty()
     return starknet
+
+@pytest.fixture
+async def account_factory(starknet):
+
+    account_path = os.path.join(here(), "mocks", "account", "Account.cairo")
+    cairo_path = os.path.join(here(), "mocks", "account")
+    account_contract = compile_starknet_files([account_path], debug_info=True, cairo_path=[cairo_path])
+
+    async def account_for_signer(signer):
+        return await starknet.deploy(contract_def=account_contract, constructor_calldata=[signer.public_key])
+
+    yield account_for_signer
 
 
 SEED = 42

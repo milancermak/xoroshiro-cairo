@@ -1,5 +1,8 @@
 import pytest
 
+from utils import Signer
+
+
 U64 = 2**64-1
 STATE = (0, 0)
 
@@ -73,3 +76,17 @@ async def test_rshift(x128_ss_test):
     for (v, b) in test_cases:
         tx = await x128_ss_test.test_rshift(v, b).call()
         assert tx.result.out == v >> b
+
+
+@pytest.mark.asyncio
+async def test_with_account(x128_ss, account_factory):
+    signer = Signer(0xc0ffee)
+    account = await account_factory(signer)
+    prngs = set()
+    size = 100
+
+    for _ in range(size):
+        tx = await signer.send_transaction(account, x128_ss.contract_address, "next", [])
+        prngs.add(tx.result.response[0])
+
+    assert len(prngs) == size
