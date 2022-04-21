@@ -1,5 +1,7 @@
 # xoroshiro-cairo
 
+![tests](https://github.com/milancermak/xoroshiro-cairo/actions/workflows/tests.yml/badge.svg)
+
 A [xoroshiro128**](https://prng.di.unimi.it/) pseudorandom number generator implementation in Cairo.
 
 ## Deploying
