@@ -1,0 +1,6 @@
+cairo-lang
+ecdsa
+fastecdsa
+pytest
+pytest-asyncio
+sympy
