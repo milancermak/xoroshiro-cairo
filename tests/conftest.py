@@ -7,6 +7,9 @@ from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet, StarknetContract
 
 
+SEED = 42
+
+
 def here() -> str:
     return os.path.abspath(os.path.dirname(__file__))
 
@@ -48,7 +51,6 @@ async def account_factory(starknet):
     yield account_for_signer
 
 
-SEED = 42
 
 
 @pytest.fixture(scope="module")

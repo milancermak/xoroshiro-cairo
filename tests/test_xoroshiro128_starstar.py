@@ -1,7 +1,7 @@
 import pytest
 
 from utils import Signer
-
+from conftest import SEED
 
 U64 = 2**64-1
 STATE = (0, 0)
@@ -9,7 +9,7 @@ STATE = (0, 0)
 @pytest.mark.asyncio
 async def test_next(x128_ss):
 
-    s0 = splitmix64(42)
+    s0 = splitmix64(SEED)
     s1 = splitmix64(s0)
     global STATE
     STATE = (s0, s1)
