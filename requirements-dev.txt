@@ -2,5 +2,5 @@ cairo-lang
 ecdsa
 fastecdsa
 pytest
-pytest-asyncio
+pytest-asyncio==0.15.1
 sympy
