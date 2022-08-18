@@ -38,20 +38,6 @@ async def starknet() -> Starknet:
     starknet = await Starknet.empty()
     return starknet
 
-@pytest.fixture
-async def account_factory(starknet):
-
-    account_path = os.path.join(here(), "mocks", "account", "Account.cairo")
-    cairo_path = os.path.join(here(), "mocks", "account")
-    account_contract = compile_starknet_files([account_path], debug_info=True, cairo_path=[cairo_path])
-
-    async def account_for_signer(signer):
-        return await starknet.deploy(contract_class=account_contract, constructor_calldata=[signer.public_key])
-
-    yield account_for_signer
-
-
-
 
 @pytest.fixture(scope="module")
 async def x128_ss(starknet) -> StarknetContract:
