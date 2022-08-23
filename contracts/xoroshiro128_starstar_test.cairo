@@ -11,7 +11,8 @@ end
 
 @view
 func test_rshift{bitwise_ptr : BitwiseBuiltin*, range_check_ptr}(v : felt, b : felt) -> (
-        out : felt):
+    out : felt
+):
     let (out) = rshift(v, b)
     return (out)
 end
