@@ -28,7 +28,7 @@ async def test_next(x128_ss):
         return result
 
     for r in range(1000):
-        tx = await x128_ss.next().invoke()
+        tx = await x128_ss.next().execute()
         r = next()
         assert tx.result.rnd == r
 

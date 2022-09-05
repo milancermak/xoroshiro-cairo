@@ -48,7 +48,4 @@ async def x128_ss(starknet) -> StarknetContract:
 @pytest.fixture(scope="module")
 async def x128_ss_test(starknet) -> StarknetContract:
     contract = compile_contract("xoroshiro128_starstar_test.cairo")
-    return await starknet.deploy(contract_class=contract,
-        # no idea why, but the constructor_calldata has to be set
-        constructor_calldata=[SEED]
-    )
+    return await starknet.deploy(contract_class=contract)
