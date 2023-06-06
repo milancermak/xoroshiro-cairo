@@ -122,7 +122,7 @@ mod test {
         let mut i = 10000;
         loop {
             if i == 0 {
-                break;
+                break ();
             }
             xoroshiro.next();
             i -= 1;
