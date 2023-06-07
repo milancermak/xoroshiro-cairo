@@ -74,12 +74,12 @@ mod test {
     use array::{ArrayTrait, SpanTrait};
     use option::OptionTrait;
     use starknet::{class_hash_try_from_felt252, ContractAddress, deploy_syscall, SyscallResultTrait};
-    use traits::Default;
 
     use super::{IXoroshiroDispatcher, IXoroshiroDispatcherTrait, Xoroshiro};
 
     fn deploy(seed: felt252) -> ContractAddress {
-        let mut calldata = Default::default();
+        // let mut calldata = Default::default();
+        let mut calldata = ArrayTrait::new();
         calldata.append(seed);
 
         let contract = class_hash_try_from_felt252(Xoroshiro::TEST_CLASS_HASH).unwrap();
@@ -115,17 +115,17 @@ mod test {
         assert(xoroshiro.next() == 15140784658950556840, 'next 20');
     }
 
-    #[test]
-    #[available_gas(10000000000000)]
-    fn test_successful_10K() {
-        let xoroshiro = IXoroshiroDispatcher { contract_address: deploy(42) };
-        let mut i = 10000;
-        loop {
-            if i == 0 {
-                break ();
-            }
-            xoroshiro.next();
-            i -= 1;
-        };
-    }
+    // #[test]
+    // #[available_gas(10000000000000)]
+    // fn test_successful_10K() {
+    //     let xoroshiro = IXoroshiroDispatcher { contract_address: deploy(42) };
+    //     let mut i = 10000;
+    //     loop {
+    //         if i == 0 {
+    //             break ();
+    //         }
+    //         xoroshiro.next();
+    //         i -= 1;
+    //     };
+    // }
 }

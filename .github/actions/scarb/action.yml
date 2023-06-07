@@ -1,0 +1,26 @@
+name: 'Install Scarb'
+
+inputs:
+  version:
+    description: TODO
+    type: string
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - id: fetch
+      shell: bash
+      run: |
+        : install Scarb
+        if [ -z '${{ inputs.version }}' ]; then
+          curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash
+        else
+          curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash -s -- -v ${{ inputs.version }}
+        fi
+
+    - id: verify
+      shell: bash
+      run: |
+        : verify installation
+        scarb --version
