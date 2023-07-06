@@ -1,37 +1,40 @@
-#[abi]
-trait IXoroshiro {
-    fn next() -> u128;
+#[starknet::interface]
+trait IXoroshiro<TContractStorage> {
+    fn next(ref self: TContractStorage) -> u128;
 }
 
-#[contract]
+ #[starknet::contract]
 mod Xoroshiro {
     const U64: u128 = 0xffffffffffffffff_u128; // 2**64-1
 
+    #[storage]
     struct Storage {
         s0: u128,
         s1: u128
     }
 
     #[constructor]
-    fn constructor(seed: u128) {
+    fn constructor(ref self: ContractState, seed: u128) {
         let s0 = splitmix(seed);
         let s1 = splitmix(s0);
 
-        s0::write(s0);
-        s1::write(s1);
+        self.s0.write(s0);
+        self.s1.write(s1);
     }
 
-    #[external]
-    fn next() -> u128 {
-        let s0 = s0::read();
-        let s1 = s1::read();
+    #[external(v0)]
+    impl XoroshiroContract of super::IXoroshiro<ContractState> {
+        fn next(ref self: ContractState) -> u128 {
+            let s0 = self.s0.read();
+            let s1 = self.s1.read();
 
-        let result = (rotl(s0 * 5, 7) * 9) & U64;
+            let result = (rotl(s0 * 5, 7) * 9) & U64;
 
-        let s1 = (s1 ^ s0) & U64;
-        s0::write((rotl(s0, 24) ^ s1 ^ (s1 * 65536)) & U64);
-        s1::write((rotl(s1, 37) & U64));
-        result
+            let s1 = (s1 ^ s0) & U64;
+            self.s0.write((rotl(s0, 24) ^ s1 ^ (s1 * 65536)) & U64);
+            self.s1.write((rotl(s1, 37) & U64));
+            result
+        }
     }
 
     fn rotl(x: u128, k: u128) -> u128 {
