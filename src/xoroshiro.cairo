@@ -3,7 +3,7 @@ trait IXoroshiro<TContractStorage> {
     fn next(ref self: TContractStorage) -> u128;
 }
 
- #[starknet::contract]
+#[starknet::contract]
 mod Xoroshiro {
     const U64: u128 = 0xffffffffffffffff_u128; // 2**64-1
 
@@ -76,7 +76,9 @@ mod Xoroshiro {
 mod test {
     use array::{ArrayTrait, SpanTrait};
     use option::OptionTrait;
-    use starknet::{class_hash_try_from_felt252, ContractAddress, deploy_syscall, SyscallResultTrait};
+    use starknet::{
+        class_hash_try_from_felt252, ContractAddress, deploy_syscall, SyscallResultTrait
+    };
     use traits::Default;
 
     use super::{IXoroshiroDispatcher, IXoroshiroDispatcherTrait, Xoroshiro};
