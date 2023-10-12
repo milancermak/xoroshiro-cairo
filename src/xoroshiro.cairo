@@ -84,9 +84,7 @@ mod test {
     use super::{IXoroshiroDispatcher, IXoroshiroDispatcherTrait, Xoroshiro};
 
     fn deploy(seed: felt252) -> ContractAddress {
-        let mut calldata = Default::default();
-        calldata.append(seed);
-
+        let calldata = array![seed];
         let contract = class_hash_try_from_felt252(Xoroshiro::TEST_CLASS_HASH).unwrap();
         let (xoroshiro, _) = deploy_syscall(contract, 0, calldata.span(), false).unwrap_syscall();
 
