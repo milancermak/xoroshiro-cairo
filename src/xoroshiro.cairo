@@ -1,10 +1,12 @@
 #[starknet::interface]
-trait IXoroshiro<TContractStorage> {
+pub trait IXoroshiro<TContractStorage> {
     fn next(ref self: TContractStorage) -> u128;
 }
 
 #[starknet::contract]
-mod Xoroshiro {
+pub mod Xoroshiro {
+    use core::starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     const U64: u128 = 0xffffffffffffffff_u128; // 2**64-1
 
     #[storage]
@@ -22,7 +24,7 @@ mod Xoroshiro {
         self.s1.write(s1);
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl XoroshiroContract of super::IXoroshiro<ContractState> {
         fn next(ref self: ContractState) -> u128 {
             let s0 = self.s0.read();
@@ -74,25 +76,19 @@ mod Xoroshiro {
 
 #[cfg(test)]
 mod test {
-    use array::{ArrayTrait, SpanTrait};
-    use option::OptionTrait;
-    use starknet::{
-        class_hash_try_from_felt252, ContractAddress, deploy_syscall, SyscallResultTrait
-    };
-    use traits::Default;
-
-    use super::{IXoroshiroDispatcher, IXoroshiroDispatcherTrait, Xoroshiro};
+    use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
+    use starknet::{ContractAddress, SyscallResult};
+    use super::{IXoroshiroDispatcher, IXoroshiroDispatcherTrait};
 
     fn deploy(seed: felt252) -> ContractAddress {
-        let calldata = array![seed];
-        let contract = class_hash_try_from_felt252(Xoroshiro::TEST_CLASS_HASH).unwrap();
-        let (xoroshiro, _) = deploy_syscall(contract, 0, calldata.span(), false).unwrap_syscall();
+        let contract = declare("Xoroshiro").unwrap().contract_class();
+        let deploy_result: SyscallResult = contract.deploy(@array![seed]);
+        let (addr, _): (ContractAddress, Span<felt252>) = deploy_result.unwrap();
 
-        xoroshiro
+        addr
     }
 
     #[test]
-    #[available_gas(10000000000)]
     fn test_next_20() {
         let xoroshiro = IXoroshiroDispatcher { contract_address: deploy(42) };
 
@@ -119,7 +115,6 @@ mod test {
     }
 
     #[test]
-    #[available_gas(10000000000000)]
     fn test_successful_10K() {
         let xoroshiro = IXoroshiroDispatcher { contract_address: deploy(42) };
         let mut i = 10000;
