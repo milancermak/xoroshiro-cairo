@@ -18,7 +18,7 @@ dependencies = [
 
 [[package]]
 name = "xoroshiro"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "snforge_std",
 ]
