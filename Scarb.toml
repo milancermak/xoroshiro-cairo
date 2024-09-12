@@ -1,7 +1,8 @@
 [package]
 name = "xoroshiro"
 version = "1.0.0"
-cairo-version = "2.0.0"
+cairo-version = "2.7.0"
+edition = "2024_07"
 authors = ["Milan Cermak"]
 description = "Pseudo-random number generator"
 readme = "README.md"
@@ -10,9 +11,23 @@ license-file = "LICENSE"
 keywords = ["random", "randomness", "prng", "cairo", "starknet", "game"]
 
 [dependencies]
-starknet = ">=2.0.0"
+starknet = ">=2.7.0"
+
+[dev-dependencies]
+snforge_std = "0.30.0"
 
 [lib]
 
 [[target.starknet-contract]]
+casm = true
 sierra = true
+
+[tool.fmt]
+sort-module-level-items = true
+max-line-length = 120
+
+[tool.snforge]
+max_n_steps = 200000000
+
+[scripts]
+test = "snforge test"

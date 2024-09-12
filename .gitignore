@@ -132,3 +132,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+target/
+.snfoundry_cache/
+.DS_Store
